@@ -8,7 +8,7 @@
 
 "use strict";
 
-import util from "util";
+import * as util from "util";
 
 export function isError(obj: any): obj is Error {
   return (

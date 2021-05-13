@@ -2,7 +2,7 @@
 
 "use strict";
 
-import { isError } from ".";
+import { isError } from "./index.js";
 
 /**
  * prepare an exception blob for sending to AWS X-Ray

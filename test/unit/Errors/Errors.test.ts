@@ -2,8 +2,8 @@
 
 "use strict";
 
-require("should");
-import * as Errors from "../../../src/Errors";
+import "should";
+import * as Errors from "../../../src/Errors/index.js";
 
 class CircularError extends Error {
   backlink: Error;

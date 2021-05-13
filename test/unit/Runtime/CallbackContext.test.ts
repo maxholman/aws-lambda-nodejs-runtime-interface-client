@@ -3,16 +3,16 @@
 "use strict";
 
 import { IncomingHttpHeaders } from "http";
-import BeforeExitListener from "../../../src/Runtime/BeforeExitListener";
-import { IRuntimeClient } from "../../../src/RuntimeClient";
+import BeforeExitListener from "../../../src/Runtime/BeforeExitListener.js";
+import { IRuntimeClient } from "../../../src/RuntimeClient/index.js";
 import {
   InvocationResponse,
   CallbackFunction,
   ICallbackContext,
-} from "../../../src/Common";
-import { build as buildCallBackContext } from "../../../src/Runtime/CallbackContext";
+} from "../../../src/Common/index.js";
+import { build as buildCallBackContext } from "../../../src/Runtime/CallbackContext.js";
 
-require("should");
+import "should";
 
 class RuntimeClientStub implements IRuntimeClient {
   lastId?: string;

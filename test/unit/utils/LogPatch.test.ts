@@ -3,11 +3,11 @@
 "use strict";
 
 import should from "should";
-import LogPatch from "../../../src/utils/LogPatch";
-import * as Errors from "../../../src/Errors";
+import LogPatch from "../../../src/utils/LogPatch.js";
+import * as Errors from "../../../src/Errors/index.js";
 
-import { captureStream, consoleSnapshot } from "./LoggingGlobals";
-import FakeTelemetryTarget from "./FakeTelemetryTarget";
+import { captureStream, consoleSnapshot } from "./LoggingGlobals.js";
+import FakeTelemetryTarget from "./FakeTelemetryTarget.js";
 
 describe("Apply the default console log patch", () => {
   const restoreConsole = consoleSnapshot();

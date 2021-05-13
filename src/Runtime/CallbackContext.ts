@@ -3,15 +3,15 @@
 
 "use strict";
 
-import BeforeExitListener from "./BeforeExitListener";
+import BeforeExitListener from "./BeforeExitListener.js";
 import {
   ErrorStringOrUndefinedOrNull,
   ICallbackContext,
   ErrorStringOrUndefined,
   CallbackFunction,
-} from "../Common";
-import * as Errors from "../Errors";
-import { IRuntimeClient } from "../RuntimeClient";
+} from "../Common/index.js";
+import * as Errors from "../Errors/index.js";
+import { IRuntimeClient } from "../RuntimeClient/index.js";
 
 /**
  * Construct the base-context object which includes the required flags and

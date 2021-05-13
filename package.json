@@ -1,9 +1,10 @@
 {
-  "name": "aws-lambda-ric",
+  "name": "aws-lambda-ric-esm",
   "version": "1.0.0",
-  "description": "AWS Lambda Runtime Interface Client for NodeJs",
-  "homepage": "https://github.com/aws/aws-lambda-nodejs-runtime-interface-client",
+  "description": "AWS Lambda Runtime Interface Client for NodeJs ESM",
+  "homepage": "https://github.com/maxholman/aws-lambda-nodejs-runtime-interface-client",
   "main": "lib/index.js",
+  "type": "module",
   "gypfile": true,
   "scripts": {
     "archive": "npx rimraf aws-lambda-ric-*.tgz && npm install && npm run build && npm pack",
@@ -20,8 +21,8 @@
     "format:test": "prettier --check \"test/**/*.ts\" --write",
     "lint": "eslint --ext \".ts,.js\" src",
     "test": "npm run test:unit",
-    "test:unit": "ts-mocha test/unit/**/*.test.ts --reporter ./test/utils/StdoutReporter -p ./test/unit/tsconfig.json",
-    "test:unit:watch": "ts-mocha test/unit/**/*.test.ts --reporter ./test/utils/StdoutReporter --watch-extensions ts --watch --watch-files src, test/unit/**/*.ts -p ./test/unit/tsconfig.json",
+    "test:unit": "TS_NODE_PROJECT=./test/unit/tsconfig.json mocha --loader=ts-node/esm --extension ts test/unit/**/*.test.ts",
+    "test:unit:watch": "TS_NODE_PROJECT=./test/unit/tsconfig.json mocha --loader=ts-node/esm --watch-extensions ts --watch --watch-files src test/unit/**/*.ts",
     "test:coverage": "nyc npm run test:unit",
     "tsc": "tsc -b src",
     "tsc:watch": "tsc -b src --watch",
@@ -65,11 +66,11 @@
     "eslint-config-prettier": "8.1.0",
     "eslint-plugin-prettier": "3.3.1",
     "husky": "6.0.0",
-    "mocha": "8.3.2",
+    "mocha": "8.4.0",
     "nyc": "^15.1.0",
     "prettier": "2.2.1",
     "should": "13.2.3",
-    "ts-mocha": "8.0.0",
+    "ts-node": "9.1.1",
     "typescript": "4.2.3"
   }
 }

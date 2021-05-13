@@ -2,8 +2,8 @@
 
 "use strict";
 
-require("should");
-import * as XRayError from "../../../src/Errors/XRayError";
+import "should";
+import * as XRayError from "../../../src/Errors/XRayError.js";
 
 describe("Formatted Error Logging", () => {
   it("should fall back to a minimal error format when an exception occurs", () => {

@@ -18,7 +18,7 @@ const {
  * enables clean test output even when applying the lambda-runtime console
  * patch.
  */
-module.exports = class StdoutReporter extends reporters.Base {
+export default class StdoutReporter extends reporters.Base {
   private _alreadyWritten: boolean;
   private _report: string;
   private _indents: number;
@@ -87,4 +87,4 @@ module.exports = class StdoutReporter extends reporters.Base {
       this._alreadyWritten = true;
     }
   }
-};
+}

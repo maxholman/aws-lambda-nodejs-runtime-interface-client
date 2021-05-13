@@ -7,7 +7,7 @@
 
 "use strict";
 
-import {
+import http, {
   Agent,
   RequestOptions,
   IncomingMessage,
@@ -15,10 +15,11 @@ import {
   OutgoingHttpHeaders,
 } from "http";
 import { URL } from "url";
+import { createRequire } from "module";
 
-import { InvocationResponse, NativeClient } from "../Common";
-import * as Errors from "../Errors";
-import * as XRayError from "../Errors/XRayError";
+import { InvocationResponse, NativeClient } from "../Common/index.js";
+import * as Errors from "../Errors/index.js";
+import * as XRayError from "../Errors/XRayError.js";
 
 const ERROR_TYPE_HEADER = "Lambda-Runtime-Function-Error-Type";
 
@@ -47,10 +48,7 @@ export interface IRuntimeClient {
 }
 
 function userAgent(): string {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const version = require("../../package.json").version;
-
-  return `aws-lambda-nodejs/${process.version}-${version}`;
+  return `aws-lambda-nodejs/${process.version}`;
 }
 
 /**
@@ -72,7 +70,10 @@ export default class RuntimeClient implements IRuntimeClient {
     httpClient?: HttpModule,
     nativeClient?: NativeClient
   ) {
-    this.http = httpClient || require("http");
+    // require needed for native modules
+    const require = createRequire(import.meta.url);
+
+    this.http = httpClient || http;
     this.nativeClient =
       nativeClient || require("../../build/Release/runtime-client.node");
     this.userAgent = userAgent();

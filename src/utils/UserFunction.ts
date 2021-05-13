@@ -10,13 +10,14 @@
 
 import path from "path";
 import fs from "fs";
-import { HandlerFunction } from "../Common";
+import { createRequire } from "module";
+import { HandlerFunction } from "../Common/index.js";
 import {
   HandlerNotFound,
   MalformedHandlerName,
   ImportModuleError,
   UserCodeSyntaxError,
-} from "../Errors";
+} from "../Errors/index.js";
 
 const FUNCTION_EXPR = /^([^.]*)\.(.*)$/;
 const RELATIVE_PATH_SUBSTRING = "..";
@@ -60,53 +61,32 @@ function _resolveHandler(object: any, nestedProperty: string): any {
 /**
  * Verify that the provided path can be loaded as a file per:
  * https://nodejs.org/dist/latest-v10.x/docs/api/modules.html#modules_all_together
- * @param string - the fully resolved file path to the module
+ * @param modulePath {string} - the fully resolved file path to the module
  * @return bool
  */
 function _canLoadAsFile(modulePath: string): boolean {
-  return fs.existsSync(modulePath) || fs.existsSync(modulePath + ".js");
+  return fs.existsSync(modulePath);
 }
 
 /**
- * Attempt to load the user's module.
  * Attempts to directly resolve the module relative to the application root,
  * then falls back to the more general require().
  */
-function _tryRequire(appRoot: string, moduleRoot: string, module: string): any {
-  const lambdaStylePath = path.resolve(appRoot, moduleRoot, module);
-  if (_canLoadAsFile(lambdaStylePath)) {
-    return require(lambdaStylePath);
-  } else {
-    // Why not just require(module)?
-    // Because require() is relative to __dirname, not process.cwd()
-    const nodeStylePath = require.resolve(module, {
-      paths: [appRoot, moduleRoot],
-    });
-    return require(nodeStylePath);
-  }
-}
-
-/**
- * Load the user's application or throw a descriptive error.
- * @throws Runtime errors in two cases
- *   1 - UserCodeSyntaxError if there's a syntax error while loading the module
- *   2 - ImportModuleError if the module cannot be found
- */
-function _loadUserApp(
+function _tryImport(
   appRoot: string,
   moduleRoot: string,
   module: string
-): any {
-  try {
-    return _tryRequire(appRoot, moduleRoot, module);
-  } catch (e) {
-    if (e instanceof SyntaxError) {
-      throw new UserCodeSyntaxError(<any>e);
-    } else if (e.code !== undefined && e.code === "MODULE_NOT_FOUND") {
-      throw new ImportModuleError(e);
-    } else {
-      throw e;
-    }
+): string {
+  const lambdaStylePath = path.resolve(appRoot, moduleRoot, module) + ".js";
+  if (_canLoadAsFile(lambdaStylePath)) {
+    return lambdaStylePath;
+  } else {
+    // Why not just require.resolve(module)?
+    // Because require() is relative to __dirname, not process.cwd()
+    const require = createRequire(import.meta.url);
+    return require.resolve(module, {
+      paths: [appRoot, moduleRoot],
+    });
   }
 }
 
@@ -122,9 +102,9 @@ function _throwIfInvalidHandler(fullHandlerString: string): void {
  * Load the user's function with the approot and the handler string.
  * @param appRoot {string}
  *   The path to the application root.
- * @param handlerString {string}
+ * @param fullHandlerString {string}
  *   The user-provided handler function in the form 'module.function'.
- * @return userFuction {function}
+ * @return userFunction {function}
  *   The user's handler function. This function will be passed the event body,
  *   the context object, and the callback function.
  * @throws In five cases:-
@@ -148,18 +128,31 @@ export const load = function (
   );
   const [module, handlerPath] = _splitHandlerString(moduleAndHandler);
 
-  const userApp = _loadUserApp(appRoot, moduleRoot, module);
-  const handlerFunc = _resolveHandler(userApp, handlerPath);
+  const modulePath = _tryImport(appRoot, moduleRoot, module);
 
-  if (!handlerFunc) {
-    throw new HandlerNotFound(
-      `${fullHandlerString} is undefined or not exported`
-    );
-  }
+  return async (...args: unknown[]) => {
+    const moduleExports = await import(modulePath).catch((e) => {
+      if (e instanceof SyntaxError) {
+        throw new UserCodeSyntaxError(<any>e);
+      } else if (e.code !== undefined && e.code === "MODULE_NOT_FOUND") {
+        throw new ImportModuleError(e);
+      } else {
+        throw e;
+      }
+    });
 
-  if (typeof handlerFunc !== "function") {
-    throw new HandlerNotFound(`${fullHandlerString} is not a function`);
-  }
+    const handlerFunc = _resolveHandler(moduleExports, handlerPath);
 
-  return handlerFunc;
+    if (!handlerFunc) {
+      throw new HandlerNotFound(
+        `${fullHandlerString} is undefined or not exported`
+      );
+    }
+
+    if (typeof handlerFunc !== "function") {
+      throw new HandlerNotFound(`${fullHandlerString} is not a function`);
+    }
+
+    return handlerFunc(...args);
+  };
 };
