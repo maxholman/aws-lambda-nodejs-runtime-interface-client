@@ -1,3 +1,14 @@
+# WARNING
+
+This is a fork of the official AWS [aws/aws-lambda-nodejs-runtime-interface-client](https://github.com/aws/aws-lambda-nodejs-runtime-interface-client)
+and works with ESM on Node 14+
+
+This fork is designed for research and experimentation purposes.
+
+DO NOT use it in production. You have been warned.
+
+Original README below
+
 ## AWS Lambda NodeJS Runtime Interface Client
 
 We have open-sourced a set of software packages, Runtime Interface Clients (RIC), that implement the Lambda

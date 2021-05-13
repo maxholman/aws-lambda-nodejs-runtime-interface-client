@@ -2,12 +2,12 @@
 
 "use strict";
 
-require("should");
+import "should";
 
 describe("Invoke the BeforeExitListener", () => {
   it("should not fail if a listerner has not been set", async () => {
     const beforeExitListenerModule = await import(
-      "../../../src/Runtime/BeforeExitListener"
+      "../../../src/Runtime/BeforeExitListener.js"
     );
     const beforeExitListener = beforeExitListenerModule.default;
 
@@ -21,7 +21,7 @@ describe("Invoke the BeforeExitListener", () => {
     };
 
     const beforeExitListenerModule = await import(
-      "../../../src/Runtime/BeforeExitListener"
+      "../../../src/Runtime/BeforeExitListener.js"
     );
     const beforeExitListener = beforeExitListenerModule.default;
 
@@ -41,7 +41,7 @@ describe("Invoke the BeforeExitListener", () => {
     };
 
     const beforeExitListenerModule = await import(
-      "../../../src/Runtime/BeforeExitListener"
+      "../../../src/Runtime/BeforeExitListener.js"
     );
     const beforeExitListener = beforeExitListenerModule.default;
 
@@ -49,7 +49,7 @@ describe("Invoke the BeforeExitListener", () => {
     beforeExitListener.invoke();
 
     const secondImport = await import(
-      "../../../src/Runtime/BeforeExitListener"
+      "../../../src/Runtime/BeforeExitListener.js"
     );
     const secondBeforeExitListener = secondImport.default;
 

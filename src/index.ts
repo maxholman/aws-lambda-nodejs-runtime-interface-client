@@ -8,13 +8,13 @@
 
 "use strict";
 
-import { HandlerFunction } from "./Common";
-import * as Errors from "./Errors";
-import RuntimeClient from "./RuntimeClient";
-import Runtime from "./Runtime";
-import BeforeExitListener from "./Runtime/BeforeExitListener";
-import LogPatch from "./utils/LogPatch";
-import * as UserFunction from "./utils/UserFunction";
+import { HandlerFunction } from "./Common/index.js";
+import * as Errors from "./Errors/index.js";
+import RuntimeClient from "./RuntimeClient/index.js";
+import Runtime from "./Runtime/index.js";
+import BeforeExitListener from "./Runtime/BeforeExitListener.js";
+import LogPatch from "./utils/LogPatch.js";
+import * as UserFunction from "./utils/UserFunction.js";
 
 LogPatch.patchConsole();
 

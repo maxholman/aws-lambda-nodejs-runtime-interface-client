@@ -3,7 +3,7 @@
 
 "use strict";
 
-import { IBeforeExitListener } from "../Common";
+import { IBeforeExitListener } from "../Common/index.js";
 
 /**
  * The runtime has a single beforeExit function which is stored in the global

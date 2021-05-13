@@ -2,12 +2,12 @@
 
 "use strict";
 
-require("should");
+import "should";
 import utilModule from "util";
 
 const sleep = utilModule.promisify(setTimeout);
 
-import InvokeContext from "../../../src/Runtime/InvokeContext";
+import InvokeContext from "../../../src/Runtime/InvokeContext.js";
 
 describe("Getting remaining invoke time", () => {
   it("should reduce by at least elapsed time", async () => {

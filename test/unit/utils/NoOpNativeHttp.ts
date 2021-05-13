@@ -1,6 +1,6 @@
 /** Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 
-import { NativeClient, InvocationResponse } from "../../../src/Common";
+import { NativeClient, InvocationResponse } from "../../../src/Common/index.js";
 
 export class NoOpNativeHttp implements NativeClient {
   done(): void {

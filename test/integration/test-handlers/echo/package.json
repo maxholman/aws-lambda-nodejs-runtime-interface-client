@@ -5,6 +5,7 @@
   "main": "app.js",
   "author": "AWS Lambda",
   "license": "Apache-2.0",
+  "type": "module",
   "dependencies": {
     "aws-lambda-ric": "file:deps/aws-lambda-ric"
   }
