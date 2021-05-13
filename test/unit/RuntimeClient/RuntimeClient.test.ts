@@ -6,7 +6,6 @@ import "should";
 import RuntimeClient from "../../../src/RuntimeClient/index.js";
 import * as runtimeErrors from "../../../src/Errors/index.js";
 import { StubHttp } from "../utils/StubHttp.js";
-import { NoOpNativeHttp } from "../utils/NoOpNativeHttp.js";
 
 class EvilError extends Error {
   get name(): string {
@@ -20,8 +19,7 @@ describe("building error requests with the RuntimeClient", () => {
   const stubHttp = new StubHttp();
   const client = new RuntimeClient(
     "notUsed:1337",
-    stubHttp,
-    new NoOpNativeHttp()
+    stubHttp
   );
 
   const errors: Array<[Error, string]> = [
