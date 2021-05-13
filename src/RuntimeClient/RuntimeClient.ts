@@ -15,13 +15,13 @@ import http, {
   OutgoingHttpHeaders,
 } from "http";
 import { URL } from "url";
-import { createRequire } from "module";
 
-import { InvocationResponse, NativeClient } from "../Common/index.js";
+import { InvocationResponse } from "../Common/index.js";
 import * as Errors from "../Errors/index.js";
 import * as XRayError from "../Errors/XRayError.js";
 
 const ERROR_TYPE_HEADER = "Lambda-Runtime-Function-Error-Type";
+const XRAY_ERROR_CAUSE = "Lambda-Runtime-Function-XRay-Error-Cause";
 
 interface HttpModule {
   Agent: typeof Agent;
@@ -58,9 +58,7 @@ function userAgent(): string {
 export default class RuntimeClient implements IRuntimeClient {
   agent: Agent;
   http: HttpModule;
-  nativeClient: NativeClient;
   userAgent: string;
-  useAlternativeClient: boolean;
 
   hostname: string;
   port: number;
@@ -68,19 +66,9 @@ export default class RuntimeClient implements IRuntimeClient {
   constructor(
     hostnamePort: string,
     httpClient?: HttpModule,
-    nativeClient?: NativeClient
   ) {
-    // require needed for native modules
-    const require = createRequire(import.meta.url);
-
     this.http = httpClient || http;
-    this.nativeClient =
-      nativeClient || require("../../build/Release/runtime-client.node");
     this.userAgent = userAgent();
-    this.nativeClient.initializeClient(this.userAgent);
-    this.useAlternativeClient =
-      process.env["AWS_LAMBDA_NODEJS_USE_ALTERNATIVE_CLIENT_1"] === "true";
-
     const [hostname, port] = hostnamePort.split(":");
     this.hostname = hostname;
     this.port = parseInt(port, 10);
@@ -104,9 +92,12 @@ export default class RuntimeClient implements IRuntimeClient {
     id: string,
     callback: () => void
   ): void {
-    const bodyString = _trySerializeResponse(response);
-    this.nativeClient.done(id, bodyString);
-    callback();
+    this._post(
+      `/2018-06-01/runtime/invocation/${id}/response`,
+      response,
+      {},
+      callback
+    );
   }
 
   /**
@@ -135,10 +126,16 @@ export default class RuntimeClient implements IRuntimeClient {
    */
   postInvocationError(error: unknown, id: string, callback: () => void): void {
     const response = Errors.toRuntimeResponse(error);
-    const bodyString = _trySerializeResponse(response);
     const xrayString = XRayError.toFormatted(error);
-    this.nativeClient.error(id, bodyString, xrayString);
-    callback();
+    this._post(
+      `/2018-06-01/runtime/invocation/${id}/error`,
+      response,
+      {
+        [ERROR_TYPE_HEADER]: response.errorType,
+        [XRAY_ERROR_CAUSE]: xrayString
+      },
+      callback
+    );
   }
 
   /**
@@ -148,7 +145,6 @@ export default class RuntimeClient implements IRuntimeClient {
    *   as json and the header array. e.g. {bodyJson, headers}
    */
   async nextInvocation(): Promise<InvocationResponse> {
-    if (this.useAlternativeClient) {
       const options = {
         hostname: this.hostname,
         port: this.port,
@@ -180,9 +176,6 @@ export default class RuntimeClient implements IRuntimeClient {
           })
           .end();
       });
-    }
-
-    return this.nativeClient.next();
   }
 
   /**
