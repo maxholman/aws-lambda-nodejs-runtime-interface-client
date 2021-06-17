@@ -7,7 +7,7 @@
   "type": "module",
   "scripts": {
     "archive": "npx rimraf aws-lambda-ric-*.tgz && npm install && npm run build && npm pack",
-    "clean": "npx rimraf {build, node_modules}",
+    "clean": "npx rimraf {build,lib,node_modules}",
     "build": "npx rimraf lib && tsc -b src",
     "format": "npm run format:src && npm run format:test",
     "format:src": "prettier --check \"src/**/*.ts\" --write",
