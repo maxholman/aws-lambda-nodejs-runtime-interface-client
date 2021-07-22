@@ -1,13 +1,13 @@
 {
   "name": "aws-lambda-ric-esm",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "AWS Lambda Runtime Interface Client for NodeJs ESM",
   "homepage": "https://github.com/maxholman/aws-lambda-nodejs-runtime-interface-client",
   "main": "lib/index.js",
   "type": "module",
   "scripts": {
     "archive": "npx rimraf aws-lambda-ric-*.tgz && npm install && npm run build && npm pack",
-    "clean": "npx rimraf {build, node_modules}",
+    "clean": "npx rimraf {build,lib,node_modules}",
     "build": "npx rimraf lib && tsc -b src",
     "format": "npm run format:src && npm run format:test",
     "format:src": "prettier --check \"src/**/*.ts\" --write",
@@ -47,22 +47,22 @@
     "statements": 75
   },
   "dependencies": {
-    "node-addon-api": "3.0.2"
+    "node-addon-api": "3.2.1"
   },
   "devDependencies": {
     "@types/mocha": "8.2.2",
-    "@types/node": "^14.14.37",
-    "@typescript-eslint/eslint-plugin": "4.20.0",
-    "@typescript-eslint/parser": "4.20.0",
-    "eslint": "7.23.0",
-    "eslint-config-prettier": "8.1.0",
-    "eslint-plugin-prettier": "3.3.1",
-    "husky": "^6.0.0",
-    "mocha": "8.3.2",
+    "@types/node": "^15.12.2",
+    "@typescript-eslint/eslint-plugin": "4.26.1",
+    "@typescript-eslint/parser": "4.26.1",
+    "eslint": "7.28.0",
+    "eslint-config-prettier": "8.3.0",
+    "eslint-plugin-prettier": "3.4.0",
+    "husky": "6.0.0",
+    "mocha": "9.0.0",
     "nyc": "^15.1.0",
-    "prettier": "2.2.1",
+    "prettier": "2.3.1",
     "should": "13.2.3",
     "ts-node": "9.1.1",
-    "typescript": "4.2.3"
+    "typescript": "4.3.2"
   }
 }
