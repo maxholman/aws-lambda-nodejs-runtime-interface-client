@@ -2,10 +2,10 @@
   "compilerOptions": {
     "composite": true,
 
-    // As recommended in https://github.com/microsoft/TypeScript/wiki/Node-Target-Mapping#node-14
-    "target": "es2020",
+    // As recommended in https://github.com/microsoft/TypeScript/wiki/Node-Target-Mapping#node-16
+    "target": "ES2021",
     "module": "es2020",
-    "lib": ["es2020"],
+    "lib": ["ES2021"],
     "moduleResolution": "node",
     "declaration": true,
     "declarationMap": true,

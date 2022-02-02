@@ -1,7 +1,7 @@
 "use strict";
 
-require("should");
-import * as Common from "../../../src/Common";
+import "should";
+import * as Common from "../../../src/Common/index.js";
 
 describe("type guards HandlerFunction", () => {
   it("should compile the code", () => {
