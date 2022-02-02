@@ -46,9 +46,6 @@
     "functions": 65,
     "statements": 75
   },
-  "dependencies": {
-    "node-addon-api": "3.2.1"
-  },
   "devDependencies": {
     "@types/mocha": "8.2.2",
     "@types/node": "^15.12.2",
