@@ -36,7 +36,7 @@ export interface IHeaderData {
   getRemainingTimeInMillis: () => number;
 }
 
-export type ErrorStringOrUndefined = Error | string | undefined;
+export type ErrorStringOrUndefined = Error | string | undefined | unknown;
 
 export type ErrorStringOrUndefinedOrNull = ErrorStringOrUndefined | null;
 

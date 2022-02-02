@@ -38,11 +38,11 @@ export const build = function (
   return _wrappedCallbackContext(callback, context);
 };
 
-function _homogeneousError(err: ErrorStringOrUndefined) {
+function _homogeneousError(err: ErrorStringOrUndefined): Error {
   if (err instanceof Error) {
     return err;
   } else {
-    return new Error(err);
+    return new Error(String(err));
   }
 }
 
